@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Dashboard · Earn Calendar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="./dashboard.html" aria-label="Dashboard">
+          <span class="brand-badge" aria-hidden="true"></span>
+          <span>Earn Calendar</span>
+        </a>
+        <div class="topbar-actions">
+          <span id="userPill" class="pill hidden"></span>
+          <button id="logoutBtn" class="btn btn-danger" type="button">
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <main class="container">
+      <div id="dashNotice" class="notice hidden" style="margin-top: 14px"></div>
+
+      <section class="toolkit-panel card" style="margin-bottom: 14px;">
+        <div class="toolkit-header">
+          <span class="card-title" style="margin: 0;">Your Financial Toolkit</span>
+          <button id="toolkitToggle" class="btn btn-pill" type="button" aria-expanded="false" aria-controls="toolkitContent">Show Features</button>
+        </div>
+        <div id="toolkitContent" class="toolkit-content collapsed" aria-hidden="true">
+          <div class="toolkit-grid">
+            <div class="toolkit-card" data-feature="earnings_streak"><span class="toolkit-sticker sticker-flame">🔥</span><span>Track consecutive profitable days</span></div>
+            <div class="toolkit-card" data-feature="monthly_salary"><span class="toolkit-sticker sticker-bounce">💰</span><span>Distribute monthly income across days</span></div>
+            <div class="toolkit-card" data-feature="income_consistency"><span class="toolkit-sticker sticker-meter">📊</span><span>Monthly consistency score</span></div>
+            <div class="toolkit-card" data-feature="smart_alerts"><span class="toolkit-sticker sticker-pulse">🚨</span><span>Spending alerts when you overspend</span></div>
+            <div class="toolkit-card" data-feature="advanced_analytics"><span class="toolkit-sticker sticker-graph">📈</span><span>Compare months &amp; trends</span></div>
+            <div class="toolkit-card" data-feature="expense_tracking"><span class="toolkit-sticker sticker-receipt">🧾</span><span>Categorized expense tracking</span></div>
+            <div class="toolkit-card" data-feature="calendar_heatmap"><span class="toolkit-sticker sticker-glow">🗓</span><span>Heatmap of performance days</span></div>
+          </div>
+        </div>
+      </section>
+
+      <nav class="dashboard-nav" aria-label="Jump to section">
+        <a href="#section-totals" class="dashboard-nav-btn">Totals</a>
+        <a href="#section-insights" class="dashboard-nav-btn">Insights</a>
+        <a href="#section-goals" class="dashboard-nav-btn">Goals</a>
+        <a href="#section-chart" class="dashboard-nav-btn">Chart</a>
+        <a href="#section-expenses" class="dashboard-nav-btn">Expenses</a>
+        <a href="#section-calendar" class="dashboard-nav-btn">Calendar</a>
+      </nav>
+
+      <section id="section-totals" class="dashboard-section">
+      <div id="netWorthCard" class="net-worth-card">
+        <div class="net-worth-label">Total Net Worth (USD)</div>
+        <div id="netWorthValue" class="net-worth-value">—</div>
+      </div>
+      <div class="totals-strip">
+        <div class="total-card total-card-earnings">
+          <div class="total-card-label">Earnings This Month</div>
+          <div id="totalThisMonth" class="total-card-value">—</div>
+        </div>
+        <div class="total-card total-card-earnings">
+          <div class="total-card-label">Earnings Today</div>
+          <div id="totalToday" class="total-card-value">—</div>
+        </div>
+        <div class="total-card total-card-earnings">
+          <div class="total-card-label">Earnings All-Time</div>
+          <div id="totalAllTime" class="total-card-value">—</div>
+        </div>
+        <div class="total-card total-card-expenses">
+          <div class="total-card-label">Expenses This Month</div>
+          <div id="expensesThisMonth" class="total-card-value">—</div>
+        </div>
+        <div class="total-card total-card-expenses">
+          <div class="total-card-label">Expenses Today</div>
+          <div id="expensesToday" class="total-card-value">—</div>
+        </div>
+        <div class="total-card total-card-net">
+          <div class="total-card-label">Net Income (This Month)</div>
+          <div id="netIncomeThisMonth" class="total-card-value">—</div>
+        </div>
+      </div>
+      </section>
+
+      <section id="section-insights" class="dashboard-section">
+      <div class="analytics-row" style="margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+        <div id="streakSection" class="streak-wrap hidden" data-feature="earnings_streak">
+          <span id="streakBadge" class="streak-badge"></span>
+          <div id="streakMessage" class="streak-message muted"></div>
+        </div>
+        <div id="consistencySection" class="analytics-badge hidden" data-feature="income_consistency">
+          <span id="consistencyLabel" class="muted" style="font-size: 12px;">Income Consistency</span>
+          <div class="consistency-bar-wrap">
+            <div id="consistencyBar" class="consistency-bar" style="width: 0%"></div>
+          </div>
+          <span id="consistencyValue">—%</span>
+        </div>
+        <div id="bestDaySection" class="analytics-badge hidden">
+          <span id="bestDayText">🏆 Best Day: —</span>
+        </div>
+        <div id="avgDailySection" class="analytics-badge hidden">
+          <span id="avgDailyText">Avg per active day: —</span>
+        </div>
+      </div>
+      <section id="insightBox" class="card insight-box insight-box-smart" style="margin-bottom: 14px">
+        <div class="card-body insight-box-body">
+          <div class="card-title" style="font-size: 13px; margin-bottom: 8px;">Insights</div>
+          <div id="insightBoxList" class="insight-list" role="list">
+            <div class="insight-item insight-neutral">Start tracking to unlock insights.</div>
+          </div>
+        </div>
+      </section>
+      <section id="spendingInsightBox" class="card insight-box spending-insight" style="margin-bottom: 14px" data-feature="smart_alerts">
+        <div class="card-body" style="padding: 12px 14px;">
+          <div class="card-title" style="font-size: 13px; margin-bottom: 6px;">Spending Insight</div>
+          <div id="spendingInsightText" class="muted" style="font-size: 13px;">Your spending is stable this month.</div>
+        </div>
+      </section>
+      </section>
+
+      <section id="section-goals" class="dashboard-section">
+      <section class="card goal-card" style="margin-bottom: 18px" data-feature="monthly_salary">
+        <div class="card-header">
+          <div class="card-title">Monthly Goal</div>
+          <button id="addMonthlyIncomeBtn" class="btn btn-pill" type="button">Add Monthly Income</button>
+        </div>
+        <div class="card-body">
+          <div class="goal-input-row">
+            <label class="label" for="goalAmount">Goal amount</label>
+            <input id="goalAmount" class="input" type="number" step="0.01" min="0" placeholder="0" />
+            <button id="goalSaveBtn" class="btn btn-primary" type="button">Save</button>
+          </div>
+          <div class="goal-progress-wrap">
+            <div class="goal-progress-bar">
+              <div id="goalProgressFill" class="goal-progress-fill" style="width: 0%"></div>
+            </div>
+            <div id="goalProgressText" class="goal-progress-text">Set a goal to see progress.</div>
+          </div>
+        </div>
+      </section>
+      </section>
+
+      <section id="section-chart" class="dashboard-section">
+      <section class="card" style="margin-bottom: 18px" data-feature="advanced_analytics">
+        <div class="card-header">
+          <div class="card-title">Monthly Earnings &amp; Expenses</div>
+          <button id="csvExportBtn" class="btn btn-pill" type="button">Download Monthly Report</button>
+        </div>
+        <div class="card-body">
+          <div class="monthly-chart-wrap">
+            <canvas id="monthlyChartCanvas"></canvas>
+          </div>
+        </div>
+      </section>
+      </section>
+
+      <section id="section-expenses" class="dashboard-section">
+      <section class="card card-expenses" style="margin-bottom: 18px" data-feature="expense_tracking">
+        <div class="card-header">
+          <div class="card-title">Expenses</div>
+          <button id="addExpenseBtn" class="btn btn-pill btn-accent" type="button">Add Expense</button>
+        </div>
+        <div class="card-body">
+          <div class="expense-summary-row">
+            <div class="expense-summary-item">
+              <span class="expense-summary-label">Monthly Expenses Total</span>
+              <span id="expensesMonthSummary" class="expense-summary-value">—</span>
+            </div>
+            <div class="expense-summary-item">
+              <span class="expense-summary-label">Total Expenses Today</span>
+              <span id="expensesTodaySummary" class="expense-summary-value">—</span>
+            </div>
+          </div>
+          <div class="expense-chart-row">
+            <div class="expense-pie-wrap">
+              <canvas id="expensesPieCanvas"></canvas>
+            </div>
+            <div id="expenseCategoryBreakdown" class="expense-breakdown">
+              <!-- JS: category totals -->
+            </div>
+          </div>
+          <div class="card-title" style="font-size: 13px; margin: 12px 0 6px;">Expenses this month</div>
+          <div id="expensesList" class="list">
+            <!-- JS: expense rows with delete -->
+          </div>
+          <div id="expensesEmptyState" class="notice empty-state hidden">No expenses this month yet.</div>
+        </div>
+      </section>
+      </section>
+
+      <section id="section-calendar" class="dashboard-section">
+      <div class="grid">
+        <section class="card card-calendar" data-feature="calendar_heatmap">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Calendar</div>
+              <div class="muted" style="font-size: 12px; margin-top: 4px">
+                Click a date to view/add/edit entries. Updates live.
+              </div>
+            </div>
+            <div class="cal-nav-wrap">
+              <button id="prevMonthBtn" class="btn btn-pill cal-nav-btn" type="button">Prev</button>
+              <button id="todayBtn" class="btn btn-pill cal-nav-btn" type="button">Today</button>
+              <button id="nextMonthBtn" class="btn btn-pill cal-nav-btn" type="button">Next</button>
+            </div>
+          </div>
+          <div class="calendar">
+            <div class="cal-head">
+              <div class="cal-month">
+                <h2 id="monthLabel">—</h2>
+                <span id="monthTotal" class="pill">Month total: —</span>
+              </div>
+              <span id="tzLabel" class="pill">TZ: —</span>
+            </div>
+            <div class="cal-weekdays" aria-hidden="true">
+              <div>Mon</div>
+              <div>Tue</div>
+              <div>Wed</div>
+              <div>Thu</div>
+              <div>Fri</div>
+              <div>Sat</div>
+              <div>Sun</div>
+            </div>
+            <div id="calGrid" class="cal-grid" role="grid" aria-label="Calendar">
+              <!-- JS renders days -->
+            </div>
+          </div>
+        </section>
+
+        <aside class="card card-selected-day">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Selected day</div>
+              <div id="dayLabel" class="muted" style="font-size: 12px; margin-top: 4px">
+                —
+              </div>
+            </div>
+            <span id="dayTotal" class="pill">Day total: —</span>
+          </div>
+          <div class="card-body">
+            <form id="entryForm" class="form">
+              <input id="editingId" type="hidden" />
+
+              <div class="field">
+                <div class="label">Amount (USD)</div>
+                <input
+                  id="amount"
+                  class="input"
+                  type="number"
+                  step="0.01"
+                  required
+                  placeholder="0.00"
+                />
+              </div>
+
+              <div class="field">
+                <div class="label">Category (optional)</div>
+                <input
+                  id="category"
+                  class="input"
+                  type="text"
+                  placeholder="e.g. Salary, Freelance"
+                />
+              </div>
+
+              <div class="field">
+                <div class="label">Description</div>
+                <textarea
+                  id="description"
+                  class="textarea"
+                  placeholder="Optional details…"
+                ></textarea>
+              </div>
+
+              <button id="saveBtn" class="btn btn-primary" type="submit">
+                Add entry
+              </button>
+              <button id="cancelEditBtn" class="btn hidden" type="button">
+                Cancel edit
+              </button>
+
+              <div id="formMsg" class="notice hidden"></div>
+            </form>
+
+            <div style="height: 12px"></div>
+
+            <div class="card-title" style="font-size: 13px; margin-bottom: 8px">
+              Entries
+            </div>
+            <div class="filter-row">
+              <select id="filterCategory" class="select" aria-label="Filter by category">
+                <option value="">All categories</option>
+              </select>
+              <input id="searchDescription" class="input" type="text" placeholder="Search description…" aria-label="Search by description" />
+            </div>
+            <div id="entriesList" class="list">
+              <!-- JS renders entries -->
+            </div>
+          </div>
+        </aside>
+      </div>
+      </section>
+
+      <div class="footer">
+        Data is stored in Supabase and persists until you delete it.
+      </div>
+    </main>
+
+    <div id="loadingOverlay" class="loading-overlay" aria-hidden="true">
+      <div class="loading-spinner"></div>
+    </div>
+    <div id="successToast" class="success-toast" aria-live="polite">Entry added!</div>
+
+    <div id="deleteModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+      <div class="modal-dialog">
+        <h2 id="deleteModalTitle" class="modal-title">Delete this entry permanently?</h2>
+        <div class="modal-actions">
+          <button id="deleteModalCancel" class="btn" type="button">Cancel</button>
+          <button id="deleteModalConfirm" class="btn btn-primary" type="button">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="salaryModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="salaryModalTitle">
+      <div class="modal-dialog">
+        <h2 id="salaryModalTitle" class="modal-title">Add Monthly Income</h2>
+        <p class="muted" style="font-size: 12px; margin: 0 0 14px;">Distribute a fixed amount evenly across every day of the month. Creates one entry per day with category &quot;Salary&quot;.</p>
+        <div class="form">
+          <div class="field">
+            <label class="label" for="salaryMonth">Month (YYYY-MM)</label>
+            <input id="salaryMonth" class="input" type="month" required />
+          </div>
+          <div class="field">
+            <label class="label" for="salaryAmount">Total amount (USD)</label>
+            <input id="salaryAmount" class="input" type="number" step="0.01" min="0.01" placeholder="e.g. 3000" required />
+          </div>
+          <div id="salaryModalMsg" class="notice hidden"></div>
+          <div class="modal-actions" style="margin-top: 8px">
+            <button id="salaryModalCancel" class="btn" type="button">Cancel</button>
+            <button id="salaryModalSubmit" class="btn btn-primary" type="button">Distribute</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="expenseModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="expenseModalTitle">
+      <div class="modal-dialog">
+        <h2 id="expenseModalTitle" class="modal-title">Add Expense</h2>
+        <form id="expenseForm" class="form">
+          <div class="field">
+            <label class="label" for="expenseAmount">Amount (USD)</label>
+            <input id="expenseAmount" class="input" type="number" step="0.01" min="0.01" placeholder="0.00" required />
+          </div>
+          <div class="field">
+            <label class="label" for="expenseCategory">Category</label>
+            <select id="expenseCategory" class="select" required>
+              <option value="Rent">Rent</option>
+              <option value="Car">Car</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Fuel">Fuel</option>
+              <option value="Bills">Bills</option>
+              <option value="Restaurants">Restaurants</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div id="expenseOtherWrap" class="field hidden">
+            <label class="label" for="expenseOtherCategory">Custom category</label>
+            <input id="expenseOtherCategory" class="input" type="text" placeholder="e.g. Subscriptions" />
+          </div>
+          <div class="field">
+            <label class="label" for="expenseDescription">Description (optional)</label>
+            <input id="expenseDescription" class="input" type="text" placeholder="Optional details…" />
+          </div>
+          <div class="field">
+            <label class="label" for="expenseDate">Date</label>
+            <input id="expenseDate" class="input" type="date" required />
+          </div>
+          <div id="expenseModalMsg" class="notice hidden"></div>
+          <div class="modal-actions" style="margin-top: 8px">
+            <button id="expenseModalCancel" class="btn" type="button">Cancel</button>
+            <button id="expenseModalSubmit" class="btn btn-primary" type="submit">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="deleteExpenseModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="deleteExpenseModalTitle">
+      <div class="modal-dialog">
+        <h2 id="deleteExpenseModalTitle" class="modal-title">Delete this expense permanently?</h2>
+        <div class="modal-actions">
+          <button id="deleteExpenseModalCancel" class="btn" type="button">Cancel</button>
+          <button id="deleteExpenseModalConfirm" class="btn btn-primary" type="button">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="alertContainer" class="alert-container" aria-live="polite"></div>
+
+    <div id="featureGuidePopup" class="feature-guide-popup hidden" role="dialog" aria-modal="true" aria-labelledby="featureGuidePopupTitle">
+      <div class="feature-guide-popup-backdrop"></div>
+      <div class="feature-guide-popup-card">
+        <span id="featureGuidePopupSticker" class="feature-guide-sticker"></span>
+        <h2 id="featureGuidePopupTitle" class="feature-guide-title"></h2>
+        <p id="featureGuidePopupDesc" class="feature-guide-desc"></p>
+        <button id="featureGuidePopupClose" class="btn btn-primary" type="button">Got it!</button>
+      </div>
+    </div>
+
+    <button id="backToTopBtn" class="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+      <span class="back-to-top-icon" aria-hidden="true">↑</span>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="./config.js"></script>
+    <script src="./auth.js"></script>
+    <script src="./feature-guide.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
+

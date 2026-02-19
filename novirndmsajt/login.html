@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Login · Earn Calendar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="./index.html" aria-label="Home">
+          <span class="brand-badge" aria-hidden="true"></span>
+          <span>Earn Calendar</span>
+        </a>
+        <div class="topbar-actions">
+          <a class="btn" href="./index.html">Home</a>
+        </div>
+      </div>
+    </div>
+
+    <main class="container">
+      <div class="auth-wrap">
+        <div class="card auth-card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Account</div>
+              <div class="muted" style="font-size: 13px; margin-top: 4px">
+                Email/password + Google sign-in via Supabase Auth.
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="auth-tabs" role="tablist" aria-label="Auth mode">
+              <button
+                id="tabLogin"
+                class="tab"
+                type="button"
+                role="tab"
+                aria-selected="true"
+              >
+                Login
+              </button>
+              <button
+                id="tabSignup"
+                class="tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+              >
+                Sign up
+              </button>
+            </div>
+
+            <div id="fileNotice" class="notice hidden" style="margin-top: 12px">
+              <strong>Google sign-in needs http(s).</strong> If you opened this
+              as a local file (<span class="mono">file://</span>), use VS Code
+              Live Server (recommended) so Google redirect can return you here.
+            </div>
+
+            <form id="authForm" class="form" style="margin-top: 12px">
+              <div class="field">
+                <div class="label">Email</div>
+                <input
+                  id="email"
+                  class="input"
+                  type="email"
+                  autocomplete="email"
+                  required
+                  placeholder="you@example.com"
+                />
+              </div>
+              <div class="field">
+                <div class="label">Password</div>
+                <input
+                  id="password"
+                  class="input"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                  minlength="6"
+                  placeholder="••••••••"
+                />
+              </div>
+
+              <button id="primaryBtn" class="btn btn-primary" type="submit">
+                Login
+              </button>
+
+              <button id="googleBtn" class="btn" type="button">
+                Continue with Google
+              </button>
+
+              <div id="authMsg" class="notice hidden"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Supabase UMD (no build tools) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="./config.js"></script>
+    <script src="./auth.js"></script>
+    <script>
+      (function () {
+        const tabLogin = document.getElementById("tabLogin");
+        const tabSignup = document.getElementById("tabSignup");
+        const form = document.getElementById("authForm");
+        const primaryBtn = document.getElementById("primaryBtn");
+        const googleBtn = document.getElementById("googleBtn");
+        const msg = document.getElementById("authMsg");
+        const fileNotice = document.getElementById("fileNotice");
+
+        let mode = "login"; // login | signup
+
+        function setMsg(text, tone) {
+          msg.classList.remove("hidden");
+          msg.style.borderColor =
+            tone === "error"
+              ? "rgba(255,77,109,.45)"
+              : "rgba(53,208,127,.35)";
+          msg.innerHTML = text;
+        }
+        function clearMsg() {
+          msg.classList.add("hidden");
+          msg.innerHTML = "";
+        }
+
+        function setMode(next) {
+          mode = next;
+          clearMsg();
+
+          tabLogin.setAttribute("aria-selected", String(mode === "login"));
+          tabSignup.setAttribute("aria-selected", String(mode === "signup"));
+          primaryBtn.textContent = mode === "login" ? "Login" : "Create account";
+
+          const pw = document.getElementById("password");
+          pw.autocomplete = mode === "login" ? "current-password" : "new-password";
+        }
+
+        tabLogin.addEventListener("click", () => setMode("login"));
+        tabSignup.addEventListener("click", () => setMode("signup"));
+
+        if (window.location.protocol === "file:") {
+          fileNotice.classList.remove("hidden");
+        }
+
+        window.Auth.getSession()
+          .then((session) => {
+            if (session) window.location.replace("./dashboard.html");
+          })
+          .catch(() => {});
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          clearMsg();
+
+          const email = document.getElementById("email").value.trim();
+          const password = document.getElementById("password").value;
+
+          try {
+            primaryBtn.disabled = true;
+            googleBtn.disabled = true;
+
+            if (mode === "login") {
+              await window.Auth.signInWithEmail(email, password);
+              window.location.replace("./dashboard.html");
+              return;
+            }
+
+            await window.Auth.signUpWithEmail(email, password);
+            setMsg(
+              "<strong>Account created.</strong> If email confirmations are enabled in Supabase, check your inbox. Otherwise you should be logged in and can continue.",
+              "ok"
+            );
+
+            // If sign-up immediately yields a session, go to dashboard.
+            const session = await window.Auth.getSession();
+            if (session) window.location.replace("./dashboard.html");
+          } catch (err) {
+            setMsg(err?.message || "Authentication failed.", "error");
+          } finally {
+            primaryBtn.disabled = false;
+            googleBtn.disabled = false;
+          }
+        });
+
+        googleBtn.addEventListener("click", async () => {
+          clearMsg();
+          try {
+            googleBtn.disabled = true;
+            primaryBtn.disabled = true;
+
+            if (window.location.protocol === "file:") {
+              setMsg(
+                "<strong>Cannot start Google sign-in from file://</strong> Use VS Code Live Server so the redirect URL can return you to this site.",
+                "error"
+              );
+              return;
+            }
+
+            await window.Auth.signInWithGoogle();
+            // Redirect happens automatically.
+          } catch (err) {
+            setMsg(err?.message || "Google sign-in failed.", "error");
+          } finally {
+            googleBtn.disabled = false;
+            primaryBtn.disabled = false;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
+

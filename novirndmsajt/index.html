@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Earn Calendar — World Leader in Earnings Tracking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="./index.html" aria-label="Home">
+          <span class="brand-badge" aria-hidden="true"></span>
+          <span>Earn Calendar</span>
+        </a>
+        <div class="topbar-actions">
+          <a class="btn" href="./login.html">Sign In</a>
+          <a class="btn btn-primary" href="./login.html">Get Started</a>
+        </div>
+      </div>
+    </div>
+
+    <main class="landing">
+      <section class="hero">
+        <h1 class="hero-headline display">World Leader in Earnings Tracking</h1>
+        <p class="hero-subheadline">
+          Track your daily income, visualize monthly performance,
+          and stay in control of your financial growth.
+        </p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary hero-cta-primary" href="./login.html">Get Started</a>
+          <a class="btn hero-cta-secondary" href="./login.html">Sign In</a>
+        </div>
+      </section>
+
+      <section class="feature-showcase">
+        <h2 class="feature-showcase-title">Powerful Financial Intelligence — In One Dashboard</h2>
+        <div class="feature-showcase-grid">
+          <article class="feature-card" data-feature="earnings_streak">
+            <span class="feature-card-sticker sticker-flame" aria-hidden="true">🔥</span>
+            <h3 class="feature-card-title">Earnings Streak</h3>
+            <p class="feature-card-desc">Build momentum. Track consecutive profitable days and stay consistent.</p>
+          </article>
+          <article class="feature-card" data-feature="monthly_salary">
+            <span class="feature-card-sticker sticker-bounce" aria-hidden="true">💰</span>
+            <h3 class="feature-card-title">Monthly Salary Auto-Fill</h3>
+            <p class="feature-card-desc">Automatically distribute your monthly income across the calendar.</p>
+          </article>
+          <article class="feature-card" data-feature="income_consistency">
+            <span class="feature-card-sticker sticker-meter" aria-hidden="true">📊</span>
+            <h3 class="feature-card-title">Income Consistency Score</h3>
+            <p class="feature-card-desc">Measure how consistent your earning performance is each month.</p>
+          </article>
+          <article class="feature-card" data-feature="smart_alerts">
+            <span class="feature-card-sticker sticker-pulse" aria-hidden="true">🚨</span>
+            <h3 class="feature-card-title">Smart Spending Alerts</h3>
+            <p class="feature-card-desc">Get notified when your spending exceeds your usual patterns.</p>
+          </article>
+          <article class="feature-card" data-feature="advanced_analytics">
+            <span class="feature-card-sticker sticker-graph" aria-hidden="true">📈</span>
+            <h3 class="feature-card-title">Advanced Analytics</h3>
+            <p class="feature-card-desc">Compare months, track trends, and visualize your financial growth.</p>
+          </article>
+          <article class="feature-card" data-feature="expense_tracking">
+            <span class="feature-card-sticker sticker-receipt" aria-hidden="true">🧾</span>
+            <h3 class="feature-card-title">Expense Tracking</h3>
+            <p class="feature-card-desc">Track categorized expenses and understand where your money goes.</p>
+          </article>
+          <article class="feature-card" data-feature="calendar_heatmap">
+            <span class="feature-card-sticker sticker-glow" aria-hidden="true">🗓</span>
+            <h3 class="feature-card-title">Calendar Heatmap</h3>
+            <p class="feature-card-desc">See high and low performance days instantly.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="features">
+        <h2 class="features-title">Everything you need</h2>
+        <ul class="features-list">
+          <li class="feature-item">
+            <span class="feature-icon">📅</span>
+            <strong>Real-time earnings calendar</strong>
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">📊</span>
+            <strong>Monthly analytics</strong>
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">🔐</span>
+            <strong>Secure Google login</strong>
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">☁️</span>
+            <strong>Permanent cloud storage</strong>
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✓</span>
+            <strong>Your data never disappears</strong>
+          </li>
+        </ul>
+      </section>
+
+      <div class="footer">
+        Built with HTML, CSS, vanilla JavaScript and Supabase. No build tools.
+      </div>
+    </main>
+
+    <div id="featureGuidePopup" class="feature-guide-popup hidden" role="dialog" aria-modal="true" aria-labelledby="featureGuidePopupTitle">
+      <div class="feature-guide-popup-backdrop"></div>
+      <div class="feature-guide-popup-card">
+        <span id="featureGuidePopupSticker" class="feature-guide-sticker"></span>
+        <h2 id="featureGuidePopupTitle" class="feature-guide-title"></h2>
+        <p id="featureGuidePopupDesc" class="feature-guide-desc"></p>
+        <button id="featureGuidePopupClose" class="btn btn-primary" type="button">Got it!</button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="./config.js"></script>
+    <script src="./auth.js"></script>
+    <script src="./feature-guide.js"></script>
+    <script>
+      (function () {
+        if (!window.Auth) return;
+        window.Auth.getSession()
+          .then(function (session) {
+            if (session) window.location.replace("./dashboard.html");
+          })
+          .catch(function () {});
+      })();
+      (function () {
+        if (typeof window.FeatureGuide === "undefined") return;
+        document.querySelectorAll(".feature-card[data-feature]").forEach(function (card) {
+          card.addEventListener("click", function () {
+            window.FeatureGuide.maybeShow(document.activeElement || card, card.getAttribute("data-feature"));
+          });
+          card.addEventListener("focus", function () {
+            window.FeatureGuide.maybeShow(card, card.getAttribute("data-feature"));
+          }, true);
+        });
+      })();
+    </script>
+  </body>
+</html>
